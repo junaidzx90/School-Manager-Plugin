@@ -1,0 +1,96 @@
+main{
+    padding: 0px !important;
+    margin: 0px !important;
+}
+#main{
+    padding: 0px !important;
+    margin: 0px !important;
+}
+aside{
+    display: none !important;
+}
+a:hover{
+    transition: .3s;
+    color: var(--wpsmp-primary-color);
+}
+div#wpsmpmain {
+    background: #e6dade;
+    width: 100%;
+}
+.smpheader {
+    height: 200px;
+    align-items: center;
+}
+h1.smph1{
+    color: #fff;
+    font-size: 40px;
+}
+h1.smph1, h4.smp4 {
+    margin: 15px 0px;
+    font-weight: 500;
+}
+h5.smph5 {
+    margin: 0;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    font-weight: 500;
+}
+h5.smph5 a{
+    display: block;
+    text-decoration: none;
+    border-bottom: 1px solid;
+}
+.smpheader {
+    height: 200px;
+    align-items: center;
+    background: linear-gradient(180deg, var(--wpsmp-primary-color), transparent);
+}
+.projectimg {
+    height: 160px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+span.wpsmp-excerpt {
+    font-weight: 300;
+    margin-bottom: 3px;
+}
+.badge-wpsmp{
+    background-color: var(--wpsmp-primary-color);
+    color: #fff;
+}
+.projectimg {
+    position: relative;
+}
+.wpsmpover{
+    position: absolute;
+    transition: .3s;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    z-index: 99;
+    background: linear-gradient( 50deg, #eae1e4, #f5f5f599, rgb(255 255 255 / 0) 100%);
+}
+small.wpsmp-likebtn {
+    position: absolute;
+    right: 5px;
+    font-size: 20px;
+    top: 0px;
+    z-index: 99;
+}
+small.wpsmp-likebtn:hover{
+    color: var(--wpsmp-primary-color);
+}
+@media only screen and (max-width: 578px){
+    .mt-sm-2{
+        margin-top: 2rem !important;
+    }
+}
+@media (min-width: 0px){
+    .wpsm.container {
+        width: unset !important;
+    }
+}
