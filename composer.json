@@ -1,0 +1,13 @@
+{
+    "name": "junayed/wp-smp",
+    "description": "Later",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "junaidzx90 (devjoo)",
+            "email": "jsjunu@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
