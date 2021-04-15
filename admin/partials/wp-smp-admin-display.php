@@ -13,7 +13,7 @@
  */
 
 echo '<form action="options.php" method="post" id="wpsmp_settings">';
-echo '<h1>📓 School Manager Settings</h1><hr>';
+echo '<h1>📔 School Manager Settings</h1><hr>';
 settings_fields( 'wpsmp_settings_section' );
 do_settings_fields( 'wpsmp_settings', 'wpsmp_settings_section' );
 submit_button();
