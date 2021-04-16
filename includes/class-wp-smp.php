@@ -177,6 +177,10 @@ class Wp_Smp {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
+		// Projects loadmore
+		$this->loader->add_action("wp_ajax_wpsmp_wc_project", $plugin_public, "wpsmp_wc_project");
+		$this->loader->add_action("wp_ajax_nopriv_wpsmp_wc_project", $plugin_public, "wpsmp_wc_project");
+
 	}
 
 	/**

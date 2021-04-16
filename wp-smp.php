@@ -37,6 +37,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 define( 'WP_SMP_VERSION', '1.0.0' );
 define( 'WPSMP_PATH', plugin_dir_path( __FILE__ ) );
+define( 'SMP_PARENT_SITE', 'localhost/wpnew' );
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wp-smp-activator.php

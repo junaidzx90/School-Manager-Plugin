@@ -94,6 +94,9 @@ class Wp_Smp_Admin {
 		add_settings_section( 'wpsmp_settings_section', '', '', 'wpsmp_settings' );
 		add_settings_field( 'wpsmp_profile', '📋 Add Profile Page', array($this,'wpsmp_profile_page_func'), 'wpsmp_settings', 'wpsmp_settings_section');
 		register_setting( 'wpsmp_settings_section', 'wpsmp_profile');
+		
+		add_settings_field( 'wc_my_email', '📧 Parent access email', array($this,'wc_my_email_page_func'), 'wpsmp_settings', 'wpsmp_settings_section');
+		register_setting( 'wpsmp_settings_section', 'wc_my_email');
 	}
 
 	// Display page
@@ -115,7 +118,11 @@ class Wp_Smp_Admin {
 			'option_none_value'     => '',
 		);
 		wp_dropdown_pages( $args );
-		echo '<br>';
+		echo '<br><br>';
+	}
+
+	function wc_my_email_page_func(){
+		echo '<br><input type="email" value="'.get_option("wc_my_email").'" name="wc_my_email" placeholder="Email">';
 	}
 
 
