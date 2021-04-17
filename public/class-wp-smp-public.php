@@ -193,9 +193,9 @@ class Wp_Smp_Public {
     /**
      * Projects
      */
-    function wpsmpwc_get_projects($id = '',$page){
+    function wpsmpwc_get_projects($id = ''){
         if(!empty($id)){
-            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/projects/'.$id.'/'.$page;
+            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/projects/'.$id;
         }
 
         $ch = curl_init();
@@ -246,20 +246,58 @@ class Wp_Smp_Public {
 
         return $obj;
     }
+    /**
+     * Get courses dropdown listitem
+     */
+    function get_wpsmp_wccourse_dropdown(){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/course_dropdown';
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $obj = json_decode($result);
 
-    // Load more project by ajax request
-    function wpsmp_wc_project(){
+        return $obj;
+    }
+
+    // Project for filter data
+    function wpsmp_wcproject_filterning(){
         check_ajax_referer('my_projects_data', 'security');
+        
+        if(isset($_POST['page'])){
+            $page = $_POST['page'];
+        }else{
+            $page = 1;
+        }
 
-        global $wp_query;
         // Get webclass student Id
-        $wcID = Wp_Smp_Public::wpsmpwc_my_info('id');
-        $user_nicename = Wp_Smp_Public::wpsmpwc_my_info('user_nicename');
+        $wcID = $this->wpsmpwc_my_info('id');
+        $user_nicename = $this->wpsmpwc_my_info('user_nicename');
 
-        // Get projects
-        $page = ( $_POST['page'] ) ? $_POST['page'] : 2;
-        $projects = Wp_Smp_Public::wpsmpwc_get_projects($wcID, $page);
- 
+        if(isset($_POST['filterdata']) || isset($_POST['filters'])){
+            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/filters/'.$_POST['filterdata'].'/'.$_POST['filters'].'/'.$page.'/'.$wcID;
+        }else{
+            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/filters/"-1"/"-1"/'.$page.'/'.$wcID;
+        }
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $obj = json_decode($result);
+
+        $projects = $obj;
+
+        if(!$projects){
+            echo "No Project Found!";
+            die;
+        }
+
         foreach($projects as $project){
             if($project->title != ""){
                 ?>

@@ -17,6 +17,33 @@ if(!defined(SMP_PARENT_SITE) && get_option("wc_my_email") == ""){
 <?php echo Wp_Smp_Public::wpsmp_page_header(); ?>
 
 <div class="wpsm container">
+    <div class="search_project">
+        <div class="input-wrap">
+            <input class="p_search_inp" type="search" placeholder="Search project">
+        </div>
+    </div>
+
+    <div class="projects_filters row mx-0 justify-content-center">
+        <div class="form-group col-sm-3">
+            <?php
+                // Here will be course title dropdown
+                echo Wp_Smp_Public::get_wpsmp_wccourse_dropdown();
+            ?>
+        </div>
+
+        <div class="form-group col-sm-3">
+            <div class="form-group">
+                <select class="custom-select dropdownmenu" id="filters">
+                    <option selected value="-1">All types</option>
+                    <option value="mostrecent">Most recent</option>
+                    <option value="mostviewed">Most viewed</option>
+                    <option value="mostliked">Most liked</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+
     <div class="smpprojects py-2">
         <div class="wpsmp-projects-items row justify-content-center">
             <?php
@@ -26,8 +53,7 @@ if(!defined(SMP_PARENT_SITE) && get_option("wc_my_email") == ""){
             $user_nicename = Wp_Smp_Public::wpsmpwc_my_info('user_nicename');
 
             // Get projects
-            $page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-            $projects = Wp_Smp_Public::wpsmpwc_get_projects($wcID, $page);
+            $projects = Wp_Smp_Public::wpsmpwc_get_projects($wcID);
            
             foreach($projects as $project){
                 if($project->title != ""){
