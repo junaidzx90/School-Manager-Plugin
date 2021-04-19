@@ -159,7 +159,7 @@ class Wp_Smp {
 		
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'wpsmp_pages_register' );
 		$this->loader->add_action( 'init', $plugin_admin, 'add_wpsmp_caps' );
-		$this->loader->add_action( 'init', $plugin_admin, 'wpsmp_projects_postype' );
+		// $this->loader->add_action( 'init', $plugin_admin, 'wpsmp_projects_postype' );
 
 	}
 

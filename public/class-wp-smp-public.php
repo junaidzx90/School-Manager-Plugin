@@ -56,8 +56,7 @@ class Wp_Smp_Public {
         add_filter('theme_page_templates', array($this, 'wpsmp_templates'));
         add_filter('template_include', array($this, 'wpsmp_page_attributes'));
         // Wp-smp archive page include for projects
-        add_filter('template_include', array($this, 'wpsmp_projects_template'));
-
+        // add_filter('template_include', array($this, 'wpsmp_projects_template'));
 	}
 
 	/**
@@ -69,7 +68,9 @@ class Wp_Smp_Public {
 
 		wp_enqueue_style( 'bootstrap', plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), $this->version, 'all' );
 
-		wp_enqueue_style( 'wp-smp-public', plugin_dir_url( __FILE__ ) . 'css/wp-smp-public.css', array(),  microtime(), 'all' );
+		wp_enqueue_style( 'wp-smp-projects', plugin_dir_url( __FILE__ ) . 'css/wp-smp-projects.css', array(),  microtime(), 'all' );
+
+		wp_enqueue_style( 'wp-smp-single-page', plugin_dir_url( __FILE__ ) . 'css/wp-smp-single-page.css', array(),  microtime(), 'all' );
 
 	}
 
@@ -83,9 +84,9 @@ class Wp_Smp_Public {
 
 		wp_enqueue_script( 'jquery.form', plugin_dir_url( __FILE__ ) . 'js/jquery.form.min.js', array( 'jquery' ), $this->version, true );
 
-		wp_enqueue_script( 'wp-smp-public', plugin_dir_url( __FILE__ ) . 'js/wp-smp-public.js', array( 'jquery' ), microtime(), true );
-
 		wp_enqueue_script( 'wp-smp-project', plugin_dir_url( __FILE__ ) . 'js/wp-smp-project.js', array( 'jquery' ), microtime(), true );
+
+		wp_enqueue_script( 'wp-smp-single-page', plugin_dir_url( __FILE__ ) . 'js/wp-smp-single-page.js', array( 'jquery' ), microtime(), true );
         
         wp_localize_script( "wp-smp-project", "my_projects_data", array(
             'ajax_url' => admin_url('admin-ajax.php'),
@@ -134,6 +135,7 @@ class Wp_Smp_Public {
     }
 
     // Define custom post template with single page
+    /*
     public function wpsmp_projects_template($template)
     {
 
@@ -160,12 +162,12 @@ class Wp_Smp_Public {
         }
         return $template;
     }
-
+    */
 
     // WPSMP PAGE HEADER
     function wpsmp_page_header(){
     ?>
-    <div class="smpheader row justify-content-center">
+    <div class="smpheader mx-0 row justify-content-center">
         <div class="wpsm-hdr-content text-center">
             <h1 class="smph1">This is Page Header</h1>
             <h4 class="smp4">This is subheading</h4>
@@ -190,23 +192,34 @@ class Wp_Smp_Public {
         return $data = $obj->$data;
     }
 
+    // get data by curl from api
+    public function send_post_request_to_json($url, $data = array()){
+        if(!empty($url) && !empty($data)){
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $obj = json_decode($result);
+
+            return $obj;
+        }
+    }
     /**
      * Projects
      */
-    function wpsmpwc_get_projects($id = ''){
-        if(!empty($id)){
-            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/projects/'.$id;
-        }
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        $obj = json_decode($result);
-
-        return $obj;
+    function wpsmpwc_get_projects(){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/projects';
+        $mymail = get_option( 'wc_my_email' );
+        $mypass = get_option("wc_user_pass");
+        $data = array(
+            "email" =>  $mymail,
+            "pass"  => $mypass
+        );
+        $result = Wp_Smp_Public::send_post_request_to_json($url, $data);
+        return $result;
     }
 
     /**
@@ -230,7 +243,6 @@ class Wp_Smp_Public {
 
     /**
      * Project attatchment for single page
-     */
     function wpsmpwc_get_project_media($id = ''){
         if(!empty($id)){
             $url = SMP_PARENT_SITE.'/wp-json/wc/v1/project_media/'.$id;
@@ -246,6 +258,7 @@ class Wp_Smp_Public {
 
         return $obj;
     }
+    */
     /**
      * Get courses dropdown listitem
      */
@@ -267,6 +280,73 @@ class Wp_Smp_Public {
     function wpsmp_wcproject_filterning(){
         check_ajax_referer('my_projects_data', 'security');
         
+        $page = 1;
+        if(isset($_POST['page'])){
+            $page = $_POST['page'];
+        }
+
+        $filterdata = "";
+        $filters = "";
+
+        if(isset($_POST['filterdata'])){
+            $filterdata = sanitize_text_field( $_POST['filterdata'] );
+        }
+        if(isset($_POST['filters'])){
+            $filters = sanitize_text_field($_POST['filters']);
+        }
+        
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/filters';
+
+        // For Sequrity
+        $mymail = get_option( 'wc_my_email' );
+        $mypass = get_option("wc_user_pass");
+
+        $data = array(
+            "filterdata" =>  $filterdata,
+            "filters"  => $filters,
+            "page"  => $page,
+            "email" =>  $mymail,
+            "pass"  => $mypass
+        );
+        $projects = Wp_Smp_Public::send_post_request_to_json($url, $data);
+
+        foreach($projects as $project){
+            
+            if($project->title != ""){
+                ?>
+                <div class="wpsmp-project col-12 col-sm-6 col-md-4 col-lg-3 mt-sm-2">
+                    <div class="projectimg">
+                        <a href="">
+                            <span class="wpsmpover"></span>
+                            <!-- <small class="wpsmp-likebtn"><i class="fa fa-heart" aria-hidden="true"></i> 0</small> -->
+                            <img src="<?php echo esc_url($project->thimbnail); ?>" alt="">
+                        </a>
+                    </div>
+                    <div class="wpsmp-project-info">
+                        <h5 class="smph5"><a href=""><?php _e($project->title,'wp-smp'); ?></a></h5>
+                        <span class="wpsmp-excerpt"><?php  _e(substr($project->excerpt, 0, 50),'wp-smp'); ?></span>
+                    </div>
+                    <div class="wpsmp-user-info d-flex justify-content-between">
+                        <span class="name d-flex flex-column align-self-end">
+                            <a href=""><?php _e($project->max_num_pages,'wp-smp'); ?></a>
+                            <small>Mega coders</small>
+                        </span>
+                        <span class="points align-self-end">
+                            <a href=""><small class="badge badge-wpsmp">Points: 18K</small></a>
+                        </span>
+                    </div>
+                </div>
+                <?php
+            }
+        }
+        
+        die;
+    }
+    /*
+    // Project for filter data
+    function wpsmp_wcproject_filterning(){
+        check_ajax_referer('my_projects_data', 'security');
+        
         if(isset($_POST['page'])){
             $page = $_POST['page'];
         }else{
@@ -275,7 +355,7 @@ class Wp_Smp_Public {
 
         // Get webclass student Id
         $wcID = $this->wpsmpwc_my_info('id');
-        $user_nicename = $this->wpsmpwc_my_info('user_nicename');
+        $display_name = $this->wpsmpwc_my_info('display_name');
 
         if(isset($_POST['filterdata']) || isset($_POST['filters'])){
             $url = SMP_PARENT_SITE.'/wp-json/wc/v1/filters/'.$_POST['filterdata'].'/'.$_POST['filters'].'/'.$page.'/'.$wcID;
@@ -315,7 +395,7 @@ class Wp_Smp_Public {
                     </div>
                     <div class="wpsmp-user-info d-flex justify-content-between">
                         <span class="name d-flex flex-column align-self-end">
-                            <a href=""><?php _e($user_nicename,'wp-smp'); ?></a>
+                            <a href=""><?php _e($display_name,'wp-smp'); ?></a>
                             <small>Mega coders</small>
                         </span>
                         <span class="points align-self-end">
@@ -328,4 +408,5 @@ class Wp_Smp_Public {
         }
         die;
     }
+    */
 }

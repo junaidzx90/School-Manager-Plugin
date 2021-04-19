@@ -27,18 +27,21 @@
         data: {
           action: 'wpsmp_wcproject_filterning',
           page: page,
+          filters: $("#filters").val(),
+          filterdata: $(".projectfilter").val(),
           security: my_projects_data.security
         },
         beforeSend: () => {
           $('.load_more_projects').prop('disabled', true).text("Loading...");
         },
+        
         success: function (response) {
           page += 1;
-          if (!response) {
-            $('.load_more_projects').remove();
-          } else {
+          if (response) {
             $('.load_more_projects').removeAttr('disabled').text("Load More");
             $('.wpsmp-projects-items').append(response);
+          } else {
+            $('.load_more_projects').fadeOut();
           }
         }
       });
@@ -61,10 +64,9 @@
       },
       success: function (response) {
         if (response) {
+          $('.load_more_projects').removeAttr('disabled').show().text("Load More");
           $("#wpsmp_preloadder").fadeOut();
           $(".wpsmp-projects-items").html(response);
-        } else {
-          $(".wpsmp-projects-items").html("No Project Found!");
         }
       },
     });
@@ -82,9 +84,12 @@
         filters: types,
         security: my_projects_data.security,
       },
+      beforeSend: function () {
+        $("#wpsmp_preloadder").show();
+      },
       success: function (response) {
+        $("#wpsmp_preloadder").fadeOut();
         if (response) {
-          $("#wpsmp_preloadder").fadeOut();
           $(".wpsmp-projects-items").html(response);
         } else {
           $(".wpsmp-projects-items").html("No Project Found!");

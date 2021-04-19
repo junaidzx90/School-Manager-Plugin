@@ -51,6 +51,8 @@ class Wp_Smp_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+
+		
 	}
 
 	/**
@@ -97,6 +99,9 @@ class Wp_Smp_Admin {
 		
 		add_settings_field( 'wc_my_email', '📧 Parent access email', array($this,'wc_my_email_page_func'), 'wpsmp_settings', 'wpsmp_settings_section');
 		register_setting( 'wpsmp_settings_section', 'wc_my_email');
+
+		add_settings_field( 'wc_user_pass', '📧 Password', array($this,'wc_user_pass_page_func'), 'wpsmp_settings', 'wpsmp_settings_section');
+		register_setting( 'wpsmp_settings_section', 'wc_user_pass');
 	}
 
 	// Display page
@@ -122,14 +127,21 @@ class Wp_Smp_Admin {
 	}
 
 	function wc_my_email_page_func(){
-		echo '<br><input type="email" value="'.get_option("wc_my_email").'" name="wc_my_email" placeholder="Email">';
+		echo '<br><input type="email" value="'.get_option("wc_my_email").'" name="wc_my_email" placeholder="Email"><br><br>';
 	}
+	function wc_user_pass_page_func(){
+		echo '<br><input type="password" value="'.get_option("wc_user_pass").'" name="wc_user_pass" placeholder="Password">';
 
+		if(get_option("wc_user_pass")){
+			if(!wp_check_password( get_option("wc_user_pass"), Wp_Smp_Public::wpsmpwc_my_info('user_pass'), Wp_Smp_Public::wpsmpwc_my_info('id') )){
+				echo "<span class='error'>Password Incorrect!</span>";
+				delete_option("wc_user_pass");
+			}
+		}
+	}
 
 	/*
 	* Creating a function to create our CPT
-	*/
-	
 	function wpsmp_projects_postype() {
 		// Set UI labels for Custom Post Type
 		$labels = array(
@@ -185,4 +197,5 @@ class Wp_Smp_Admin {
 		register_post_type( 'projects', $args );
 	 
 	}
+	*/
 }
