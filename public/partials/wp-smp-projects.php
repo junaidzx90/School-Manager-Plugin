@@ -3,18 +3,18 @@
 <?php wp_enqueue_script('jquery.form'); ?>
 <?php wp_enqueue_script('bootstrap'); ?>
 <?php wp_enqueue_script('wp-smp-project');
-
+$public_ins = new  Wp_Smp_Public();
 ?>
 <?php get_header(); ?>
 <?php require_once(WPSMP_PATH.'admin/partials/wpsmp-colors.php'); ?>
 <?php
-if(!wp_check_password( get_option("wc_user_pass"), Wp_Smp_Public::wpsmpwc_my_info('user_pass'), Wp_Smp_Public::wpsmpwc_my_info('id') )){
+if(!wp_check_password( get_option("wc_user_pass"), $public_ins->wpsmpwc_my_info('user_pass'), $public_ins->wpsmpwc_my_info('id') )){
     echo "<span class='error'>Please Login to your parent side!</span>";
     die;
 }
 ?>
 <div id="wpsmpmain">
-<?php echo Wp_Smp_Public::wpsmp_page_header(); ?>
+<?php echo $public_ins->wpsmp_page_header(); ?>
 
 <?php
 if(isset($_GET['pst'])){
@@ -32,7 +32,7 @@ if(isset($_GET['pst'])){
             <div class="form-group col-sm-3">
                 <?php
                     // Here will be course title dropdown
-                    echo Wp_Smp_Public::get_wpsmp_wccourse_dropdown();
+                    echo $public_ins->get_wpsmp_wccourse_dropdown();
                 ?>
             </div>
 
@@ -55,10 +55,10 @@ if(isset($_GET['pst'])){
                 global $wp_query;
                 // Get webclass student Id
                 // Get projects
-                $projects = Wp_Smp_Public::wpsmpwc_get_projects();
+                $projects = $public_ins->wpsmpwc_get_projects();
             
                 foreach($projects as $project){
-                    if($project->title != ""){
+                    if(!empty($project->title)){
                     ?>
                     <div class="wpsmp-project col-12 col-sm-6 col-md-4 col-lg-3 mt-sm-2">
                         <div class="projectimg">
@@ -75,10 +75,10 @@ if(isset($_GET['pst'])){
                         <div class="wpsmp-user-info d-flex justify-content-between">
                             <span class="name d-flex flex-column align-self-end">
                                 <a href=""><?php _e($project->name,'wp-smp'); ?></a>
-                                <small>Mega coders</small>
+                                <small class="classname"><?php _e($project->classname,'wp-smp'); ?></small>
                             </span>
                             <span class="points align-self-end">
-                                <a href=""><small class="badge badge-wpsmp">Points: 18K</small></a>
+                                <a target="_junu" href="<?php echo esc_url(SMP_PARENT_SITE.'/leaderboard'); ?>"><small class="badge badge-wpsmp">Points: <?php _e($project->points,'wp-smp'); ?></small></a>
                             </span>
                         </div>
                     </div>

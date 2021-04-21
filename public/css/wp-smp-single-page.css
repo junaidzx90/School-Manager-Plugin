@@ -151,6 +151,9 @@ input#pagelink {
     color: white;
 }
 .btncontents a.btn:hover{
-    color: var(--wpsmp-primary-color);
-    background-color: white;
+    opacity: 1;
+}
+.btncontents span.wpsmp-excerpt {
+    margin: 40px 0px;
+    display: inline-block;
 }

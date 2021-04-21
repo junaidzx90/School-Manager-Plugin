@@ -38,10 +38,13 @@
         success: function (response) {
           page += 1;
           if (response) {
-            $('.load_more_projects').removeAttr('disabled').text("Load More");
-            $('.wpsmp-projects-items').append(response);
-          } else {
-            $('.load_more_projects').fadeOut();
+            if (response != 404) {
+              $('.load_more_projects').removeAttr('disabled').text("Load More");
+              $('.wpsmp-projects-items').append(response);
+            }
+            if (response == 404) {
+              $('.load_more_projects').fadeOut();
+            }
           }
         }
       });
@@ -50,6 +53,8 @@
     // Project filter
   $(".projectfilter").on("change", function () {
     let filterdata = $(this).val();
+    page = 2;
+    
     $.ajax({
       type: "POST",
       url: my_projects_data.ajax_url,
@@ -64,9 +69,14 @@
       },
       success: function (response) {
         if (response) {
-          $('.load_more_projects').removeAttr('disabled').show().text("Load More");
           $("#wpsmp_preloadder").fadeOut();
-          $(".wpsmp-projects-items").html(response);
+          if (response != 404) {
+            $('.load_more_projects').removeAttr('disabled').show().text("Load More");
+            $(".wpsmp-projects-items").html(response);
+          }
+          if (response == 404) {
+            $(".wpsmp-projects-items").html("No project found!");
+          }
         }
       },
     });
@@ -75,6 +85,8 @@
    // Filters projects
    $("#filters").on("change", function () {
     let types = $(this).val();
+    page = 2;
+    
     $.ajax({
       type: "POST",
       url: my_projects_data.ajax_url,
@@ -88,11 +100,14 @@
         $("#wpsmp_preloadder").show();
       },
       success: function (response) {
-        $("#wpsmp_preloadder").fadeOut();
         if (response) {
-          $(".wpsmp-projects-items").html(response);
-        } else {
-          $(".wpsmp-projects-items").html("No Project Found!");
+          $("#wpsmp_preloadder").fadeOut();
+          if (response != 404) {
+            $(".wpsmp-projects-items").html(response);
+          }
+          if (response == 404) {
+            $(".wpsmp-projects-items").html("No project found!");
+          }
         }
       },
     });

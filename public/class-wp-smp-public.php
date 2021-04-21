@@ -47,7 +47,7 @@ class Wp_Smp_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name = '', $version = '' ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
@@ -192,7 +192,7 @@ class Wp_Smp_Public {
         return $data = $obj->$data;
     }
 
-    // get data by curl from api
+    // SEND POST REQUEST
     public function send_post_request_to_json($url, $data = array()){
         if(!empty($url) && !empty($data)){
             $ch = curl_init();
@@ -200,6 +200,20 @@ class Wp_Smp_Public {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $obj = json_decode($result);
+
+            return $obj;
+        }
+    }
+    // SEND GET REQUEST
+    public function send_get_request_to_json($url){
+        if(!empty($url)){
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
             $result = curl_exec($ch);
             curl_close($ch);
             $obj = json_decode($result);
@@ -218,47 +232,64 @@ class Wp_Smp_Public {
             "email" =>  $mymail,
             "pass"  => $mypass
         );
-        $result = Wp_Smp_Public::send_post_request_to_json($url, $data);
+        $result = $this->send_post_request_to_json($url, $data);
         return $result;
     }
 
     /**
-     * Project Excerpt For single page
+     * Update post views count
      */
-    function get_project_excerpt($id = ''){
-        if(!empty($id)){
-            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/project_excerpt/'.$id;
-        }
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        $obj = json_decode($result);
-
-        return $obj;
+    function wpsmpwc_updateview($post_id){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/upview';
+        $data = array(
+            "post_id" =>  $post_id
+        );
+        $this->send_post_request_to_json($url, $data);
     }
 
     /**
-     * Project attatchment for single page
-    function wpsmpwc_get_project_media($id = ''){
-        if(!empty($id)){
-            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/project_media/'.$id;
-        }
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        $obj = json_decode($result);
-
-        return $obj;
+     * Get Single project
+     */
+    public function wpsmp_get_single_project($post_id){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/singleproject';
+        $mymail = get_option( 'wc_my_email' );
+        $mypass = get_option("wc_user_pass");
+        $data = array(
+            "email" =>  $mymail,
+            "pass"  => $mypass,
+            "post_id"  => $post_id
+        );
+        $result = $this->send_post_request_to_json($url, $data);
+        return $result;
     }
-    */
+
+    /**
+     * Get get_wcmypoints
+     */
+    public function wpsmp_get_wcmypoints($my_id){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/mypoints/'.$my_id;
+        $result = $this->send_get_request_to_json($url);
+        return $result;
+    }
+
+    /**
+     * Get postview
+     */
+    public function wpsmp_wc_postview($post_id){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/postview/'.$post_id;
+        $result = $this->send_get_request_to_json($url);
+        return $result;
+    }
+
+    /**
+     * Get postview
+     */
+    public function wpsmp_wc_classname($my_id){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/classname/'.$my_id;
+        $result = $this->send_get_request_to_json($url);
+        return $result;
+    }
+
     /**
      * Get courses dropdown listitem
      */
@@ -308,11 +339,15 @@ class Wp_Smp_Public {
             "email" =>  $mymail,
             "pass"  => $mypass
         );
-        $projects = Wp_Smp_Public::send_post_request_to_json($url, $data);
+        $projects = $this->send_post_request_to_json($url, $data);
+
+        if($projects == "404"){
+            echo 404;
+            die;
+        }
 
         foreach($projects as $project){
-            
-            if($project->title != ""){
+            if(!empty($project->title)){
                 ?>
                 <div class="wpsmp-project col-12 col-sm-6 col-md-4 col-lg-3 mt-sm-2">
                     <div class="projectimg">
@@ -328,11 +363,11 @@ class Wp_Smp_Public {
                     </div>
                     <div class="wpsmp-user-info d-flex justify-content-between">
                         <span class="name d-flex flex-column align-self-end">
-                            <a href=""><?php _e($project->max_num_pages,'wp-smp'); ?></a>
-                            <small>Mega coders</small>
+                            <a href=""><?php _e($project->name,'wp-smp'); ?></a>
+                            <small class="myclass"><?php echo __($project->classname, 'wp-smp'); ?></small>
                         </span>
                         <span class="points align-self-end">
-                            <a href=""><small class="badge badge-wpsmp">Points: 18K</small></a>
+                            <a target="_junu" href="<?php echo esc_url(SMP_PARENT_SITE.'/leaderboard'); ?>"><small class="badge badge-wpsmp">Points: <?php echo __($project->points, 'wp-smp'); ?></small></a>
                         </span>
                     </div>
                 </div>
@@ -342,71 +377,4 @@ class Wp_Smp_Public {
         
         die;
     }
-    /*
-    // Project for filter data
-    function wpsmp_wcproject_filterning(){
-        check_ajax_referer('my_projects_data', 'security');
-        
-        if(isset($_POST['page'])){
-            $page = $_POST['page'];
-        }else{
-            $page = 1;
-        }
-
-        // Get webclass student Id
-        $wcID = $this->wpsmpwc_my_info('id');
-        $display_name = $this->wpsmpwc_my_info('display_name');
-
-        if(isset($_POST['filterdata']) || isset($_POST['filters'])){
-            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/filters/'.$_POST['filterdata'].'/'.$_POST['filters'].'/'.$page.'/'.$wcID;
-        }else{
-            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/filters/"-1"/"-1"/'.$page.'/'.$wcID;
-        }
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        $obj = json_decode($result);
-
-        $projects = $obj;
-
-        if(!$projects){
-            echo "No Project Found!";
-            die;
-        }
-
-        foreach($projects as $project){
-            if($project->title != ""){
-                ?>
-                <div class="wpsmp-project col-12 col-sm-6 col-md-4 col-lg-3 mt-sm-2">
-                    <div class="projectimg">
-                        <a href="">
-                            <span class="wpsmpover"></span>
-                            <!-- <small class="wpsmp-likebtn"><i class="fa fa-heart" aria-hidden="true"></i> 0</small> -->
-                            <img src="<?php echo esc_url($project->thimbnail); ?>" alt="">
-                        </a>
-                    </div>
-                    <div class="wpsmp-project-info">
-                        <h5 class="smph5"><a href=""><?php _e($project->title,'wp-smp'); ?></a></h5>
-                        <span class="wpsmp-excerpt"><?php  _e(substr($project->excerpt, 0, 50),'wp-smp'); ?></span>
-                    </div>
-                    <div class="wpsmp-user-info d-flex justify-content-between">
-                        <span class="name d-flex flex-column align-self-end">
-                            <a href=""><?php _e($display_name,'wp-smp'); ?></a>
-                            <small>Mega coders</small>
-                        </span>
-                        <span class="points align-self-end">
-                            <a href=""><small class="badge badge-wpsmp">Points: 18K</small></a>
-                        </span>
-                    </div>
-                </div>
-                <?php
-            } 
-        }
-        die;
-    }
-    */
 }
