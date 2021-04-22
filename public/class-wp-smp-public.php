@@ -72,6 +72,8 @@ class Wp_Smp_Public {
 
 		wp_enqueue_style( 'wp-smp-single-page', plugin_dir_url( __FILE__ ) . 'css/wp-smp-single-page.css', array(),  microtime(), 'all' );
 
+		wp_enqueue_style( 'wp-smp-profile', plugin_dir_url( __FILE__ ) . 'css/wp-smp-profile.css', array(),  microtime(), 'all' );
+
 	}
 
 	/**
@@ -85,14 +87,15 @@ class Wp_Smp_Public {
 		wp_enqueue_script( 'jquery.form', plugin_dir_url( __FILE__ ) . 'js/jquery.form.min.js', array( 'jquery' ), $this->version, true );
 
 		wp_enqueue_script( 'wp-smp-project', plugin_dir_url( __FILE__ ) . 'js/wp-smp-project.js', array( 'jquery' ), microtime(), true );
-
+        
 		wp_enqueue_script( 'wp-smp-single-page', plugin_dir_url( __FILE__ ) . 'js/wp-smp-single-page.js', array( 'jquery' ), microtime(), true );
         
         wp_localize_script( "wp-smp-project", "my_projects_data", array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'security' => wp_create_nonce( 'my_projects_data' ),
         ));
-
+        
+        wp_enqueue_script( 'wp-smp-profile', plugin_dir_url( __FILE__ ) . 'js/wp-smp-profile.js', array( 'jquery' ), microtime(), true );
 	}
 
 	/**
@@ -268,6 +271,21 @@ class Wp_Smp_Public {
             "email" =>  $mymail,
             "pass"  => $mypass,
             "post_id"  => $post_id
+        );
+        $result = $this->send_post_request_to_json($url, $data);
+        return $result;
+    }
+
+    /**
+     * Get Profile
+     */
+    public function wpsmp_get_my_profile(){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/profile';
+        $mymail = get_option( 'wc_my_email' );
+        $mypass = get_option("wc_user_pass");
+        $data = array(
+            "email" =>  $mymail,
+            "pass"  => $mypass,
         );
         $result = $this->send_post_request_to_json($url, $data);
         return $result;
