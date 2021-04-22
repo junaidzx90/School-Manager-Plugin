@@ -149,11 +149,65 @@ input#pagelink {
     background: var(--wpsmp-primary-color);
     opacity: .7;
     color: white;
+    width: 60%;
+    margin: 0 auto;
 }
 .btncontents a.btn:hover{
     opacity: 1;
 }
 .btncontents span.wpsmp-excerpt {
-    margin: 40px 0px;
+    margin: 40px 24px;
     display: inline-block;
+}
+.gallery {
+    flex-flow: wrap;
+}
+.profileinfo {
+    text-align: center;
+}
+.badge{
+    line-height: 2;
+}
+.myname .badge{
+    line-height: 1;
+    margin-left: 10px;
+    vertical-align: top;
+}
+.body_footer {
+    margin-top: 14px;
+}
+.single-contnt{
+    text-align: center;
+}
+.bg-prymary{
+    background-color: var(--wpsmp-primary-color);
+    color: #ffffff;
+}
+.single_title{
+    color: var(--wpsmp-primary-color);
+}
+@media only screen and (max-width: 768px){
+    .left_side{
+        padding: 0px !important;
+        margin-bottom: 10px;
+    }
+    .right_side{
+        padding: 0px !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+@media only screen and (max-width: 480px){
+    .imgitem {
+        min-width: 100% !important;
+        height: fit-content !important;
+        padding: 0px !important;
+        margin-bottom: 10px;
+    }
+    .imgitem img {
+        border: unset;
+    }
+    .profileinfo {
+        text-align: right;
+    }
 }

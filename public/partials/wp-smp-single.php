@@ -37,13 +37,19 @@ if(!empty($thisProject)){
                     <div class="content bg-white">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="myname"><?php echo __($thisProject->name, 'wp-smp'); ?></h4>
-                                <small class="myclass"><?php echo __($public_ins->wpsmp_wc_classname($myid), 'wp-smp'); ?></small>
-                                <?php echo __($thisProject->points, 'wp-smp'); ?>
+                                <div class="profileinfo">
+                                    <?php echo $public_ins->wpsmpwc_my_info('avatar'); ?>
+                                    <h4 class="myname"><?php echo __($thisProject->name, 'wp-smp'); ?><span class="badge bg-prymary"><?php echo __($thisProject->points, 'wp-smp'); ?></span></h4>
+                                    <small class="myclass"><?php echo __($public_ins->wpsmp_wc_classname($myid), 'wp-smp'); ?></small>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <?php echo __($thisProject->post_date, 'wp-smp'); ?>
-                                <?php echo __($thisProject->postview, 'wp-smp'); ?>
+                            <div class="card-body single-contnt">
+                                <span class="wpsmp-excerpt"><?php  _e($thisProject->excerpt,'wp-smp'); ?></span>
+
+                                <div class="body_footer">
+                                    <?php echo __($thisProject->post_date, 'wp-smp'); ?>
+                                    <span class="badge badge-warning"><?php echo __($thisProject->postview, 'wp-smp'); ?> Views</span>
+                                </div>
                             </div>
 
                             <div class="card-footer">
@@ -68,9 +74,7 @@ if(!empty($thisProject)){
 
                             <!-- Project Link -->
                             <div class="px-0 mt-3 text-center d-flex justify-content-center">
-                                <div class="btncontents mb-5">
-                                    <span class="wpsmp-excerpt"><?php  _e($thisProject->excerpt,'wp-smp'); ?></span>
-
+                                <div class="btncontents mb-3">
                                     <?php
                                     if(!empty($thisProject->project_url)){
                                         ?>
@@ -109,18 +113,18 @@ if(!empty($thisProject)){
                                 ?>
                                 <div class="wpsmp-project col-12 col-sm-6 col-md-4 col-lg-3 mt-sm-2">
                                     <div class="projectimg">
-                                        <a href="">
+                                        <a href="?pst=<?php _e($project->post_id, 'wp-smp') ?>">
                                             <span class="wpsmpover"></span>
                                             <img src="<?php echo esc_url($project->thimbnail); ?>" alt="">
                                         </a>
                                     </div>
                                     <div class="wpsmp-project-info">
-                                        <h5 class="smph5"><a href=""><?php _e($project->title,'wp-smp'); ?></a></h5>
+                                        <h5 class="smph5"><a href="?pst=<?php _e($project->post_id, 'wp-smp') ?>"><?php _e($project->title,'wp-smp'); ?></a></h5>
                                         <span class="wpsmp-excerpt"><?php  _e(substr($project->excerpt, 0, 50),'wp-smp'); ?></span>
                                     </div>
                                     <div class="wpsmp-user-info d-flex justify-content-between">
                                         <span class="name d-flex flex-column align-self-end">
-                                            <a href=""><?php _e($project->name,'wp-smp'); ?></a>
+                                            <a href="<?php echo esc_url(home_url('/' . $public_ins->get_post_slug(get_option('wpsmp_profile', true)).'?sid='.$myid)); ?>"><?php _e($project->name,'wp-smp'); ?></a>
                                             <small class="myclass"><?php echo __($project->classname, 'wp-smp'); ?></small>
                                         </span>
                                         <span class="points align-self-end">

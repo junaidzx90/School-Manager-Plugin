@@ -133,7 +133,8 @@ class Wp_Smp_Admin {
 		echo '<br><input type="password" value="'.get_option("wc_user_pass").'" name="wc_user_pass" placeholder="Password">';
 
 		if(get_option("wc_user_pass")){
-			if(!wp_check_password( get_option("wc_user_pass"), Wp_Smp_Public::wpsmpwc_my_info('user_pass'), Wp_Smp_Public::wpsmpwc_my_info('id') )){
+			$public_ins = new Wp_Smp_Public();
+			if(!wp_check_password( get_option("wc_user_pass"), $public_ins->wpsmpwc_my_info('user_pass'), $public_ins->wpsmpwc_my_info('id') )){
 				echo "<span class='error'>Password Incorrect!</span>";
 				delete_option("wc_user_pass");
 			}

@@ -176,6 +176,16 @@ class Wp_Smp_Public {
     <?php
     }
 
+    function get_post_slug($post_id)
+    {
+        global $wpdb;
+        if ($slug = $wpdb->get_var("SELECT post_name FROM {$wpdb->prefix}posts WHERE ID = $post_id")) {
+            return $slug;
+        } else {
+            return '';
+        }
+    }
+
     // get my information from parent site
     function wpsmpwc_my_info($data){
         $mymail = get_option( 'wc_my_email' );
@@ -351,19 +361,19 @@ class Wp_Smp_Public {
                 ?>
                 <div class="wpsmp-project col-12 col-sm-6 col-md-4 col-lg-3 mt-sm-2">
                     <div class="projectimg">
-                        <a href="">
+                        <a href="?pst=<?php _e($project->post_id, 'wp-smp') ?>">
                             <span class="wpsmpover"></span>
                             <!-- <small class="wpsmp-likebtn"><i class="fa fa-heart" aria-hidden="true"></i> 0</small> -->
                             <img src="<?php echo esc_url($project->thimbnail); ?>" alt="">
                         </a>
                     </div>
                     <div class="wpsmp-project-info">
-                        <h5 class="smph5"><a href=""><?php _e($project->title,'wp-smp'); ?></a></h5>
+                        <h5 class="smph5"><a href="?pst=<?php _e($project->post_id, 'wp-smp') ?>"><?php _e($project->title,'wp-smp'); ?></a></h5>
                         <span class="wpsmp-excerpt"><?php  _e(substr($project->excerpt, 0, 50),'wp-smp'); ?></span>
                     </div>
                     <div class="wpsmp-user-info d-flex justify-content-between">
                         <span class="name d-flex flex-column align-self-end">
-                            <a href=""><?php _e($project->name,'wp-smp'); ?></a>
+                            <a href="<?php echo esc_url(home_url('/' . $public_ins->get_post_slug(get_option('wpsmp_profile', true)).'?sid='.$myid)); ?>"><?php _e($project->name,'wp-smp'); ?></a>
                             <small class="myclass"><?php echo __($project->classname, 'wp-smp'); ?></small>
                         </span>
                         <span class="points align-self-end">

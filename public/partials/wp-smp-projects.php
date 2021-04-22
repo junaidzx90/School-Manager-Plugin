@@ -4,6 +4,7 @@
 <?php wp_enqueue_script('bootstrap'); ?>
 <?php wp_enqueue_script('wp-smp-project');
 $public_ins = new  Wp_Smp_Public();
+$myid = $public_ins->wpsmpwc_my_info('id');
 ?>
 <?php get_header(); ?>
 <?php require_once(WPSMP_PATH.'admin/partials/wpsmp-colors.php'); ?>
@@ -64,17 +65,16 @@ if(isset($_GET['pst'])){
                         <div class="projectimg">
                             <a href="?pst=<?php _e($project->post_id, 'wp-smp') ?>">
                                 <span class="wpsmpover"></span>
-                                <!-- <small class="wpsmp-likebtn"><i class="fa fa-heart" aria-hidden="true"></i> 0</small> -->
                                 <img src="<?php echo esc_url($project->thimbnail); ?>" alt="">
                             </a>
                         </div>
                         <div class="wpsmp-project-info">
-                            <h5 class="smph5"><a href=""><?php _e($project->title,'wp-smp'); ?></a></h5>
+                            <h5 class="smph5"><a href="?pst=<?php _e($project->post_id, 'wp-smp') ?>"><?php _e($project->title,'wp-smp'); ?></a></h5>
                             <span class="wpsmp-excerpt"><?php  _e(substr($project->excerpt, 0, 50),'wp-smp'); ?></span>
                         </div>
                         <div class="wpsmp-user-info d-flex justify-content-between">
                             <span class="name d-flex flex-column align-self-end">
-                                <a href=""><?php _e($project->name,'wp-smp'); ?></a>
+                                <a href="<?php echo esc_url(home_url('/' . $public_ins->get_post_slug(get_option('wpsmp_profile', true)).'?sid='.$myid)); ?>"><?php _e($project->name,'wp-smp'); ?></a>
                                 <small class="classname"><?php _e($project->classname,'wp-smp'); ?></small>
                             </span>
                             <span class="points align-self-end">
@@ -85,7 +85,6 @@ if(isset($_GET['pst'])){
                     <?php
                     }
                 }
-                
                 ?>
             </div>
             <?php
