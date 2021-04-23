@@ -65,10 +65,13 @@ class Wp_Smp_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
+        wp_enqueue_style( 'bootstrap', plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), $this->version, 'all' );
 
         wp_enqueue_style('webclass_main', $this->wpsmp_get_webclass_scripts('webclass_main_css'), array(), $this->version, 'all');
 
-		wp_enqueue_style( 'bootstrap', plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), $this->version, 'all' );
+        wp_enqueue_style( 'fontawesome', plugin_dir_url( __FILE__ ) . 'css/fontawesome/fontawesome.min.css', array(), $this->version, 'all' );
+
+        wp_enqueue_style( 'solid', plugin_dir_url( __FILE__ ) . 'css/fontawesome/solid.min.css', array(), $this->version, 'all' );
 
 		wp_enqueue_style( 'wp-smp-projects', plugin_dir_url( __FILE__ ) . 'css/wp-smp-projects.css', array(),  microtime(), 'all' );
 

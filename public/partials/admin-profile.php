@@ -4,7 +4,7 @@ $myprofile = $public_ins->wpsmp_get_my_profile();
 ?>
 <div class="wp-smp_dashboard_wrapper row mx-0 clearfix">
     <!-- wp-smp_Profile ifo -->
-    <div class="wp-smp_profile_info col-12 dahboard_banner">
+    <div class="wp-smp_profile_info col-12 dahboard_banner smpheader">
         <div class="container px-0">
             <div class="user_profile_info pb-4 row mx-0">
 
@@ -130,14 +130,14 @@ $myprofile = $public_ins->wpsmp_get_my_profile();
             </div>
         </div>
         <!-- Edit profile -->
-        <div class="edit_profile p_edit"><i class="fas fa-pen" aria-hidden="true"></i><span>Edit Profile</span></div>
+        <div class="edit_profile p_edit"><i class="fas fa-edit"></i><span>Edit Profile</span></div>
         <div class="edit_profile p_save d-none">Save</div>
     </div>
 
     <div class="container profile_info_wraps px-0">
         <div class="row mx-0">
             <!-- wp-smp_dashboard tabs -->
-            <div class="user_info_left pt-5 pb-2 col-12 col-md-4">
+            <div style="top: 33px !important;" class="user_info_left pt-5 pb-2 col-12 col-md-4">
                 <span class="toggleclass">
                     <span class="line"></span>
                     <span class="line"></span>
