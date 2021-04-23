@@ -180,6 +180,9 @@ class Wp_Smp {
 		// wpsmp_wcproject_filterning
 		$this->loader->add_action("wp_ajax_wpsmp_wcproject_filterning", $plugin_public, "wpsmp_wcproject_filterning");
 		$this->loader->add_action("wp_ajax_nopriv_wpsmp_wcproject_filterning", $plugin_public, "wpsmp_wcproject_filterning");
+		
+		$this->loader->add_action("wp_ajax_save_user_data", $plugin_public,"save_user_data");
+		$this->loader->add_action("wp_ajax_nopriv_save_user_data", $plugin_public,"save_user_data");
 
 	}
 

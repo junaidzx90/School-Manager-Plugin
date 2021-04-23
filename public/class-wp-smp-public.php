@@ -66,6 +66,8 @@ class Wp_Smp_Public {
 	 */
 	public function enqueue_styles() {
 
+        wp_enqueue_style('webclass_main', $this->wpsmp_get_webclass_scripts('webclass_main_css'), array(), $this->version, 'all');
+
 		wp_enqueue_style( 'bootstrap', plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), $this->version, 'all' );
 
 		wp_enqueue_style( 'wp-smp-projects', plugin_dir_url( __FILE__ ) . 'css/wp-smp-projects.css', array(),  microtime(), 'all' );
@@ -85,6 +87,10 @@ class Wp_Smp_Public {
 		wp_enqueue_script( 'bootstrap', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array( 'jquery' ), $this->version, true );
 
 		wp_enqueue_script( 'jquery.form', plugin_dir_url( __FILE__ ) . 'js/jquery.form.min.js', array( 'jquery' ), $this->version, true );
+
+		wp_enqueue_script( 'webclass_main_js', $this->wpsmp_get_webclass_scripts('webclass_main_js'), array( 'jquery' ), $this->version, true );
+
+		wp_enqueue_script( 'webclass_profile_js', $this->wpsmp_get_webclass_scripts('webclass_profile_js'), array( 'jquery' ), $this->version, true );
 
 		wp_enqueue_script( 'wp-smp-project', plugin_dir_url( __FILE__ ) . 'js/wp-smp-project.js', array( 'jquery' ), microtime(), true );
         
@@ -189,6 +195,26 @@ class Wp_Smp_Public {
         }
     }
 
+    function save_user_data(){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/save_profile_data';
+        $mymail = get_option( 'wc_my_email' );
+        $mypass = get_option("wc_user_pass");
+        $data = array(
+            "email" =>  $mymail,
+            "pass"  => $mypass,
+            "avatar" =>  $_POST['avatar'],
+            "name_inp" =>  $_POST['name_inp'],
+            "school_inp" =>  $_POST['school_inp'],
+            "skilled" =>  $_POST['skilled'],
+            "desc_inp" =>  $_POST['desc_inp'],
+            "class_inp" =>  $_POST['class_inp'],
+        );
+        
+        $result = $this->send_post_request_to_json($url, $data);
+        echo $result;
+        die;
+    }
+
     // get my information from parent site
     function wpsmpwc_my_info($data){
         $mymail = get_option( 'wc_my_email' );
@@ -286,6 +312,66 @@ class Wp_Smp_Public {
         $data = array(
             "email" =>  $mymail,
             "pass"  => $mypass,
+        );
+        $result = $this->send_post_request_to_json($url, $data);
+        return $result;
+    }
+
+    /**
+     * Get webclass_css
+     */
+    public function wpsmp_get_webclass_scripts($param){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/webclassscripts';
+        $result = $this->send_get_request_to_json($url);
+        return $result->$param;
+    }
+
+    /**
+     * Get my ratting exist
+     */
+    public function wpsmp_get_my_rattings(){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/rattings';
+        $mymail = get_option( 'wc_my_email' );
+        $mypass = get_option("wc_user_pass");
+        $data = array(
+            "email" =>  $mymail,
+            "pass"  => $mypass,
+        );
+        $result = $this->send_post_request_to_json($url, $data);
+        return $result;
+    }
+
+    /**
+     * Get my ratting exist
+     */
+    public function wpsmp_get_my_points_rattings($param){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/points_rattings';
+        $mymail = get_option( 'wc_my_email' );
+        $mypass = get_option("wc_user_pass");
+        $data = array(
+            "email" =>  $mymail,
+            "pass"  => $mypass,
+            "type"  => $param,
+        );
+        $result = $this->send_post_request_to_json($url, $data);
+        return $result;
+    }
+
+    // Get rattings Icon
+    public function get_rattings_icons($param){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/rattings_icons';
+        $data = array(
+            "sum"  => $param,
+        );
+        $result = $this->send_post_request_to_json($url, $data);
+        return $result;
+    }
+
+    // Get Suffix value
+    public function formatwccountinwithsuffix($param){
+        $url = SMP_PARENT_SITE.'/wp-json/wc/v1/suffixvalue';
+        $data = array(
+            "sum"  => $param,
         );
         $result = $this->send_post_request_to_json($url, $data);
         return $result;
