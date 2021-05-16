@@ -28,7 +28,27 @@ h1, h2, h3, h4, h5, h6{
 li.nav-item a {
     color: #9e9e9e !important;
 }
-
+.smpheader {
+    background: #526b61;
+}
+.profile_awerd_icon {
+    color: #fec100;
+}
+.profile_coin_icon {
+    color: #389e66;
+}
+span.delete__project {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 9999;
+    background: #ff3501;
+    padding: 7px;
+    border-radius: 0px 0px 0px 12px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
 .errorpage{
     margin: 0 auto;
     text-align: center;

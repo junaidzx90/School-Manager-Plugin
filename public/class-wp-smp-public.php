@@ -320,6 +320,27 @@ class Wp_Smp_Public {
         return $result;
     }
 
+
+    /**
+     * Delete Project
+     */
+    public function delete_project(){
+        if(isset($_POST['project_id'])){
+            $project_id = intval($_POST['project_id']);
+            $url = SMP_PARENT_SITE.'/wp-json/wc/v1/pdelete';
+            $mymail = get_option( 'wc_my_email' );
+            $mypass = get_option("wc_user_pass");
+            $data = array(
+                "email" =>  $mymail,
+                "pass"  => $mypass,
+                "project_id"  => $project_id,
+            );
+            $result = $this->send_post_request_to_json($url, $data);
+            echo $result;
+            die;
+        }
+    }
+
     /**
      * Get webclass_css
      */
@@ -480,7 +501,7 @@ class Wp_Smp_Public {
                     </div>
                     <div class="wpsmp-user-info d-flex justify-content-between">
                         <span class="name d-flex flex-column align-self-end">
-                            <a href="<?php echo esc_url(home_url('/' . $public_ins->get_post_slug(get_option('wpsmp_profile', true)).'?sid='.$myid)); ?>"><?php _e($project->name,'wp-smp'); ?></a>
+                            <a href="<?php echo esc_url(home_url('/' . $this->get_post_slug(get_option('wpsmp_profile', true)).'?sid='.$myid)); ?>"><?php _e($project->name,'wp-smp'); ?></a>
                             <small class="myclass"><?php echo __($project->classname, 'wp-smp'); ?></small>
                         </span>
                         <span class="points align-self-end">

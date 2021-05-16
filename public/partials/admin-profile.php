@@ -110,7 +110,6 @@ $myprofile = $public_ins->wpsmp_get_my_profile();
                             echo '<option value="megacoders">Mega Coders</option>';
                             echo '<option value="procoders">Pro Coders</option>';
                         }
-
                         ?>
                     </select>
 
@@ -208,37 +207,7 @@ $myprofile = $public_ins->wpsmp_get_my_profile();
 
                             <!-- Projects -->
                             <div class="tab-pane active card mt-2" id="projectspane">
-                                <?php if(count_user_posts( $myprofile->ID, 'wc-projects', true )> 0): ?>
-                                <div class="card-body">
-                                    <div class="profile_projects">
-                                        <div class="d-flex justify-content-between my-2">
-                                            <h3 class="all_projects_ttl text-capitalize">
-                                                <?php echo __(str_replace(["-","_"]," ",$myprofile->user_nicename),'wp-smp'); ?>
-                                                Projects</h3>
-                                            <a href="<?php echo home_url( '/wc-projects' ) ?>" type="button"
-                                                class="upproject btn btn-success my-1">Upload Project</a>
-                                        </div>
-
-                                        <!-- {PROJECT WILL BE HERE} -->
-                                    </div>
-                                </div>
-                                <?php else: ?>
-                                <style>
-                                    body {
-                                        min-height: 100vh !important;
-                                    }
-                                </style>
-                                <!-- IF No posts/projects -->
-                                <div class="card border-0 rates_courses_card pt-4 mt-5 mb-4">
-                                    <img class="iconimg" src="<?php echo $myprofile->avatarurl.'points.jpg'; ?>"
-                                        alt="">
-                                    <div class="card-body">
-                                        <blockquote class="mx-auto text-center">
-                                            Here you will see all your projects.
-                                        </blockquote>
-                                    </div>
-                                </div>
-                                <?php endif; ?>
+                                projects
                             </div>
 
                             <!-- Earnings -->
@@ -322,6 +291,64 @@ $myprofile = $public_ins->wpsmp_get_my_profile();
 
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Projects -->
+    <div class="container">
+        <div class="allprojects mt-5">
+            <div class="container px-0">
+                <h3 class="single_title">MY PROJECTS</h3>
+                <div class="smpprojects py-2">
+                    <div class="wpsmp-projects-items row justify-content-center">
+                        <?php
+                        global $wp_query;
+                        // Get webclass student Id
+                        // Get projects
+                        $projects = $public_ins->wpsmpwc_get_projects();
+                    
+                        foreach($projects as $project){
+                            if(!empty($project->title)){
+                                ?>
+                                <div class="wpsmp-project col-12 col-sm-6 col-md-4 col-lg-3 mt-sm-2">
+                                    <div class="projectimg">
+                                        <span class="delete__project" data-id="<?php echo $project->post_id; ?>"><i class="fa fa-trash projectdel" aria-hidden="true"></i></span>
+                                        <a href="?pst=<?php _e($project->post_id, 'wp-smp') ?>">
+                                            <span class="wpsmpover"></span>
+                                            <img src="<?php echo esc_url($project->thimbnail); ?>" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="wpsmp-project-info">
+                                        <h5 class="smph5"><a href="?pst=<?php _e($project->post_id, 'wp-smp') ?>"><?php _e($project->title,'wp-smp'); ?></a></h5>
+                                        <span class="wpsmp-excerpt"><?php  _e(substr($project->excerpt, 0, 50),'wp-smp'); ?></span>
+                                    </div>
+                                    <div class="wpsmp-user-info d-flex justify-content-between">
+                                        <span class="name d-flex flex-column align-self-end">
+                                            <a href="<?php echo esc_url(home_url('/' . $public_ins->get_post_slug(get_option('wpsmp_profile', true)).'?sid='.$myid)); ?>"><?php _e($project->name,'wp-smp'); ?></a>
+                                            <small class="myclass"><?php echo __($project->classname, 'wp-smp'); ?></small>
+                                        </span>
+                                        <span class="points align-self-end">
+                                            <a target="_junu" href="<?php echo esc_url(SMP_PARENT_SITE.'/leaderboard'); ?>"><small class="badge badge-wpsmp">Points: <?php echo __($project->points, 'wp-smp'); ?></small></a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                        }
+                        
+                        ?>
+                    </div>
+                    <?php
+                    if($projects->max_num_pages > 1 ){
+                        ?>
+                        <div class="text-center my-5 loadmorediv">
+                            <button type="button" class="btn btn-outline-primary px-5 load_more_projects">Load More</button>
+                        </div>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
         </div>

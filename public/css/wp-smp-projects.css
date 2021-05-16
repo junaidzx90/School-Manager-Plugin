@@ -15,7 +15,10 @@ aside{
 }
 a:hover{
     transition: .3s;
-    color: var(--wpsmp-primary-color);
+    color: var(--wpsmp-primary-color) !important;
+}
+span.name a {
+    color: var(--wpsmp-primary-color) !important;
 }
 #wpsmp_preloadder {
     position: fixed;
@@ -114,7 +117,7 @@ h5.smph5 {
     margin: 0;
     padding-bottom: 3px;
     padding-top: 3px;
-    font-weight: 500;
+    font-weight: 600;
 }
 h5.smph5 a{
     display: block;
@@ -180,7 +183,10 @@ small.wpsmp-likebtn:hover{
     background-color: var(--wpsmp-primary-color);
     border-color: white;
 }
-.search_project{
+.wpsm-hdr-content h1, h4 {
+    color: #ffffff !important;
+}
+.search_project_box{
     display: flex;
     justify-content: center;
 }
@@ -218,6 +224,9 @@ small.wpsmp-likebtn:hover{
 .projects_filters .form-group {
     height: fit-content;
     margin-bottom: 0px;
+}
+h5.smph5 a {
+    color: unset;
 }
 @media only screen and (max-width: 578px){
     .mt-sm-2{

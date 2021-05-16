@@ -23,7 +23,7 @@ if(isset($_GET['pst'])){
 }else{
 ?>
     <div class="wpsm container">
-        <div class="search_project">
+        <div class="search_project_box">
             <div class="input-wrap">
                 <input class="p_search_inp" type="search" placeholder="Search project">
             </div>

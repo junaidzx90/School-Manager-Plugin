@@ -2,14 +2,17 @@
 wp_head();
 get_header();
 wp_enqueue_style('bootstrap');
-wp_enqueue_style('webclass_main_css');
 wp_enqueue_style('fontawesome.min');
 wp_enqueue_style('solid');
+wp_enqueue_style('webclass_main_css');
 wp_enqueue_style('wp-smp-profile');
-wp_enqueue_script('wp-smp-profile');
+wp_enqueue_script('bootstrap');
 wp_enqueue_script('webclass_main_js');
 wp_enqueue_script('webclass_profile_js');
-wp_enqueue_script('bootstrap');
+wp_enqueue_script('wp-smp-profile');
+wp_localize_script( "wp-smp-profile", "profile_url", array(
+    'ajaxurl' => admin_url('admin-ajax.php')
+));
 
 wp_localize_script( "webclass_main_js", "webclass_main", array(
     'ajaxurl' => admin_url('admin-ajax.php')
